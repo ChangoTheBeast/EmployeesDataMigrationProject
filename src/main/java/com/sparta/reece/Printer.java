@@ -16,7 +16,19 @@ public class Printer {
         System.out.println(date);
     }
 
-    public static void printError(SQLException e) {
+    public static void printError(Throwable e) {
         System.err.println(e.getMessage());
+    }
+
+    public static void print(long timeTaken) {
+        if (timeTaken > 1000000000) {
+            double duration = timeTaken/1000000000.0;
+            System.out.println("Time taken: " + duration + " seconds");
+        } else if (timeTaken > 1000000) {
+            double duration = timeTaken/1000000.0;
+            System.out.println("Time taken: " + duration + " milliseconds");
+        } else {
+            System.out.println("Time taken: " + timeTaken + " nanoseconds");
+        }
     }
 }
