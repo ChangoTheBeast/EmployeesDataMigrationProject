@@ -12,9 +12,6 @@ public class InsertEmployeesTask implements Runnable {
 
     @Override
     public void run() {
-        EmployeesDAO employeesDAO = new EmployeesDAO();
-//        synchronized (this) {
-            employeesDAO.addEmployees(employees);
-//        }
+        EmployeeManager.addEmployees(employees);
     }
 }

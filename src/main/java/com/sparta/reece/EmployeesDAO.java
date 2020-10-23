@@ -7,7 +7,7 @@ import java.util.HashMap;
 public class EmployeesDAO {
     private String URL="jdbc:mysql://localhost:3306/myLocal?serverTimezone=GMT";
     private Connection connection = null;
-    private String selectEmployees="SELECT COUNT(*) FROM Employees";
+    private String selectEmployees="SELECT * FROM Employees WHERE emp_id = ?";
     private String insertEmployees="INSERT INTO Employees(emp_id, title, first_name, middle_initial, last_name, gender, email, date_of_birth, date_of_joining, salary) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     private void getConnection() {
         try {
@@ -17,29 +17,29 @@ public class EmployeesDAO {
         }
     }
 
-    public void readEmployees() {
+    public void readEmployees(int id) {
         if (connection == null) {
             getConnection();
         }
         try {
             PreparedStatement statement = connection.prepareStatement(selectEmployees);
+            statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
             if (resultSet != null) {
                 while (resultSet.next()) {
-                    Printer.print(resultSet.getInt(1));
-//                    StringBuilder stringBuilder = new StringBuilder();
-//                    stringBuilder.append(resultSet.getInt(1));
-//                    stringBuilder.append(", ");
-//                    for (int i = 2; i < 8; i++) {
-//                        stringBuilder.append(resultSet.getString(i));
-//                        stringBuilder.append(", ");
-//                    }
-//                    stringBuilder.append(resultSet.getDate(8));
-//                    stringBuilder.append(", ");
-//                    stringBuilder.append(resultSet.getDate(9));
-//                    stringBuilder.append(", ");
-//                    stringBuilder.append(resultSet.getInt(10));
-//                    Printer.print(stringBuilder.toString());
+                    StringBuilder stringBuilder = new StringBuilder();
+                    stringBuilder.append(resultSet.getInt(1));
+                    stringBuilder.append(", ");
+                    for (int i = 2; i < 8; i++) {
+                        stringBuilder.append(resultSet.getString(i));
+                        stringBuilder.append(", ");
+                    }
+                    stringBuilder.append(resultSet.getDate(8));
+                    stringBuilder.append(", ");
+                    stringBuilder.append(resultSet.getDate(9));
+                    stringBuilder.append(", ");
+                    stringBuilder.append(resultSet.getInt(10));
+                    Printer.print(stringBuilder.toString());
                 }
             }
         } catch (SQLException e) {

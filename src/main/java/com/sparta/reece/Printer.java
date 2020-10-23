@@ -31,4 +31,12 @@ public class Printer {
             System.out.println("Time taken: " + timeTaken + " nanoseconds");
         }
     }
+
+    public static void printError(String message) {
+        System.err.println(message);
+    }
+
+    public static void print(int oldId, int newId) {
+        System.out.println("Old ID: " + oldId + "\nNew ID: " + newId);
+    }
 }

@@ -14,16 +14,17 @@ public class ReadIntoDB {
 
     public static void read() {
         long startTime = System.nanoTime();
-        Path path = Paths.get("resources/EmployeeRecordsLarge.csv");
+        Path path = Paths.get("resources/EmployeeRecords.csv");
         EmployeesDAO employeesDAO = new EmployeesDAO();
         List<EmployeeDTO> duplicates = new ArrayList<>();
         HashMap<Integer, EmployeeDTO> records = new HashMap<>();
         Set<Integer> uniqueIds = new HashSet<>();
         Log log = new Log();
+        long numberOfEntries = 0;
 
-        try (Scanner scanner = new Scanner(new File("resources/EmployeeRecordsLarge.csv"));
+        try (Scanner scanner = new Scanner(new File("resources/EmployeeRecords.csv"));
              Stream<String> stream = Files.lines(path);) {
-            long numberOfEntries = stream.count();
+            numberOfEntries = stream.count();
             scanner.nextLine();
             while(scanner.hasNext()) {
                 String entry = scanner.nextLine();
@@ -34,12 +35,10 @@ public class ReadIntoDB {
                     records.put(employee.getEmployeeID(), employee);
                     uniqueIds.add(employee.getEmployeeID());
                 }
-                //Time taken without threads == 25 seconds.
-                //Time taken with ~10 threads == 1.06 seconds.
+                //Time taken without threads == 28.3 seconds.
+                //Time taken with ~100 threads == 3.84 seconds.
                 //Time taken on large file without threads == 171.5 seconds
-                //Time taken on large file with ~10 threads == 44.45 seconds
-                //Time taken on large file with 20-40 threads == 11.68 seconds
-                //Time taken on large file with 100 threads == 14.7 seconds
+                //Time taken on large file with 100 threads == 13.5 seconds
                 if (records.size() > numberOfEntries/100 || records.size() > 2000) {
                     Thread thread = new Thread(new InsertEmployeesTask(records));
                     threads.add(thread);
@@ -55,6 +54,15 @@ public class ReadIntoDB {
         Printer.print(records.size());
         Printer.print("Number of Duplicates found:");
         Printer.print(duplicates.size());
+        Printer.print("Generating new IDs for duplicates");
+        for (EmployeeDTO employee : duplicates) {
+            int oldId = employee.getEmployeeID();
+            int newId = IdGenerator.generateID(numberOfEntries, uniqueIds);
+            employee.setEmployeeID(newId);
+            records.put(newId, employee);
+            uniqueIds.add(newId);
+            Printer.print(oldId, newId);
+        }
         employeesDAO.addEmployees(records);
         for (Thread thread : threads) {
             try {
@@ -69,7 +77,7 @@ public class ReadIntoDB {
         Printer.print(timeTaken);
 //        for (Integer id : records.keySet()) {
 //            EmployeeDTO record = records.get(id);
-//            employeesDAO.addEmployee(record.getEmployeeID(), record.getEmployeeTitle(), record.getEmployeeFName(), record.getEmployeeMiddleInitial(), record.getEmployeeLName(), record.getEmployeeGender(), record.getEmployeeEmail(), record.getEmployeeDOB(), record.getEmployeeDOJ(),record.getEmployeeSalary());
+//
 //        }
     }
 }

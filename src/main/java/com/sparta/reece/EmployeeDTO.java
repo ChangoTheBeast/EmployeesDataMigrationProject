@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class EmployeeDTO {
-    private final int employeeID;
+    private int employeeID;
     private String employeeTitle;
     private String employeeFName;
     private String employeeMiddleInitial;
@@ -80,5 +80,9 @@ public class EmployeeDTO {
 
     public int getEmployeeSalary() {
         return employeeSalary;
+    }
+
+    public void setEmployeeID(int employeeID) {
+        this.employeeID = employeeID;
     }
 }
