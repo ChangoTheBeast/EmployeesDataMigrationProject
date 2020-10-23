@@ -1,7 +1,6 @@
 package com.sparta.reece;
 
 import java.sql.Date;
-import java.sql.SQLException;
 
 public class Printer {
     public static void print(String message) {
@@ -17,18 +16,22 @@ public class Printer {
     }
 
     public static void printError(Throwable e) {
-        System.err.println(e.getMessage());
+        if (e.getMessage() == null) {
+            System.err.println("Please supply a valid ID");
+        } else {
+            System.err.println(e.getMessage());
+        }
     }
 
-    public static void print(long timeTaken) {
+    public static void print(long timeTaken, String task) {
         if (timeTaken > 1000000000) {
             double duration = timeTaken/1000000000.0;
-            System.out.println("Time taken: " + duration + " seconds");
+            System.out.println("Time taken to " + task + ": " + duration + " seconds");
         } else if (timeTaken > 1000000) {
             double duration = timeTaken/1000000.0;
-            System.out.println("Time taken: " + duration + " milliseconds");
+            System.out.println("Time taken to " + task + ": " + duration + " milliseconds");
         } else {
-            System.out.println("Time taken: " + timeTaken + " nanoseconds");
+            System.out.println("Time taken to " + task + ": " + timeTaken + " nanoseconds");
         }
     }
 
@@ -38,5 +41,13 @@ public class Printer {
 
     public static void print(int oldId, int newId) {
         System.out.println("Old ID: " + oldId + "\nNew ID: " + newId);
+    }
+
+    public static void displayStartMenu() {
+        System.out.println("Please select an option below:");
+        System.out.println("1: Select an employee");
+        System.out.println("2: Delete an employee");
+        System.out.println("3: Update an employee");
+        System.out.println("4: Quit");
     }
 }

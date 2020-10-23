@@ -14,7 +14,7 @@ public class ReadIntoDB {
 
     public static void read() {
         long startTime = System.nanoTime();
-        Path path = Paths.get("resources/EmployeeRecords.csv");
+        Path path = Paths.get("resources/EmployeeRecordsLarge.csv");
         EmployeesDAO employeesDAO = new EmployeesDAO();
         List<EmployeeDTO> duplicates = new ArrayList<>();
         HashMap<Integer, EmployeeDTO> records = new HashMap<>();
@@ -22,7 +22,7 @@ public class ReadIntoDB {
         Log log = new Log();
         long numberOfEntries = 0;
 
-        try (Scanner scanner = new Scanner(new File("resources/EmployeeRecords.csv"));
+        try (Scanner scanner = new Scanner(new File("resources/EmployeeRecordsLarge.csv"));
              Stream<String> stream = Files.lines(path);) {
             numberOfEntries = stream.count();
             scanner.nextLine();
@@ -74,7 +74,7 @@ public class ReadIntoDB {
         }
         long timeTaken = System.nanoTime() - startTime;
 
-        Printer.print(timeTaken);
+        Printer.print(timeTaken, "read into the database");
 //        for (Integer id : records.keySet()) {
 //            EmployeeDTO record = records.get(id);
 //
