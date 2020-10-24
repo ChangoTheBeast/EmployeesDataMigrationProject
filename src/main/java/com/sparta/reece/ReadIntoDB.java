@@ -23,7 +23,7 @@ public class ReadIntoDB {
         long numberOfEntries = 0;
 
         try (Scanner scanner = new Scanner(new File("resources/EmployeeRecordsLarge.csv"));
-             Stream<String> stream = Files.lines(path);) {
+             Stream<String> stream = Files.lines(path)) {
             numberOfEntries = stream.count();
             scanner.nextLine();
             while(scanner.hasNext()) {
@@ -38,8 +38,8 @@ public class ReadIntoDB {
                 //Time taken without threads == 28.3 seconds.
                 //Time taken with ~100 threads == 3.84 seconds.
                 //Time taken on large file without threads == 171.5 seconds
-                //Time taken on large file with 100 threads == 13.5 seconds
-                if (records.size() > numberOfEntries/100 || records.size() > 2000) {
+                //Time taken on large file with 150 threads == 11.8 seconds
+                if (records.size() > numberOfEntries/150 || records.size() > 1000) {
                     Thread thread = new Thread(new InsertEmployeesTask(records));
                     threads.add(thread);
                     thread.start();

@@ -54,8 +54,8 @@ public class EmployeesDAO {
         try {
             PreparedStatement statement = connection.prepareStatement(insertEmployees);
             int i = 1;
+            connection.setAutoCommit(false);
             for (EmployeeDTO employee : employees.values()) {
-                connection.setAutoCommit(true);
                 statement.setInt(1, employee.getEmployeeID());
                 statement.setString(2, employee.getEmployeeTitle());
                 statement.setString(3, employee.getEmployeeFName());
@@ -67,9 +67,9 @@ public class EmployeesDAO {
                 statement.setDate(9, Date.valueOf(employee.getEmployeeDOJ()));
                 statement.setInt(10, employee.getEmployeeSalary());
                 statement.addBatch();
-
-                if (i % 100 == 0 || i == employees.size()) {
-                    int[] successes = statement.executeBatch();
+                if (i == employees.size()) {
+                    statement.executeBatch();
+                    connection.commit();
                 }
                 i++;
             }
